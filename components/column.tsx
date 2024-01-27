@@ -11,11 +11,11 @@ import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 
 export type Task = {
-  id: number;
+  id?: number;
   title: string;
   description: string;
-  date: string;
-  status: 'pending' | 'completed';
+  date: Date | string;
+  status?: 'pending' | 'completed';
 };
 
 export const data: Task[] = [

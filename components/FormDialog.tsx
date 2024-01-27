@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -8,10 +10,13 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import TaskForm from './TaskForm';
+import { useState } from 'react';
 
 export default function FormDialog() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant='default'>Create New</Button>
       </DialogTrigger>
@@ -20,7 +25,7 @@ export default function FormDialog() {
           <DialogTitle>Create Task</DialogTitle>
           <DialogDescription>Create a new Task</DialogDescription>
         </DialogHeader>
-        <TaskForm />
+        <TaskForm setIsOpen={setIsOpen} />
       </DialogContent>
     </Dialog>
   );

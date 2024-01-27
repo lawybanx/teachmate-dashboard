@@ -27,6 +27,10 @@ import {
 } from '@/components/ui/popover';
 import { toast } from 'sonner';
 
+import { addTask } from '@/lib/features/tasks/tasksSlice';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { Dispatch, SetStateAction } from 'react';
+
 const formSchema = z.object({
   title: z
     .string()
@@ -46,12 +50,20 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function TaskForm() {
+type TaskFormProps = {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+};
+
+export default function TaskForm({ setIsOpen }: TaskFormProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
 
+  const dispatch = useAppDispatch();
+
   function onSubmit(data: FormValues) {
+    dispatch(addTask(data));
+    setIsOpen(false);
     toast.success('A new task has been created');
   }
 
