@@ -10,7 +10,8 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 
-type Task = {
+export type Task = {
+  id: number;
   title: string;
   description: string;
   date: string;
@@ -19,6 +20,7 @@ type Task = {
 
 export const data: Task[] = [
   {
+    id: 1,
     title: 'First',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt, at quam.',
@@ -26,6 +28,7 @@ export const data: Task[] = [
     date: '2024-01-26T00:00:00.000Z',
   },
   {
+    id: 2,
     title: 'Second',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt, at quam.',
@@ -33,6 +36,7 @@ export const data: Task[] = [
     date: '2024-01-26T00:00:00.000Z',
   },
   {
+    id: 3,
     title: 'Third',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt, at quam.',
@@ -40,6 +44,7 @@ export const data: Task[] = [
     date: '2024-01-26T00:00:00.000Z',
   },
   {
+    id: 4,
     title: 'Fourth',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt, at quam.',
@@ -47,6 +52,7 @@ export const data: Task[] = [
     date: '2024-01-26T00:00:00.000Z',
   },
   {
+    id: 5,
     title: 'Fifth',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt, at quam.',
@@ -62,6 +68,8 @@ export const columns: ColumnDef<Task>[] = [
     cell: ({ row }) => (
       <div className='font-medium capitalize'>{row.getValue('title')}</div>
     ),
+    enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: 'description',
@@ -104,7 +112,7 @@ export const columns: ColumnDef<Task>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
             <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Mark Complete</DropdownMenuItem>
+            <DropdownMenuItem>Toggle Status</DropdownMenuItem>
             <DropdownMenuItem>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

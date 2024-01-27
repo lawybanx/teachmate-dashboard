@@ -33,7 +33,9 @@ import {
 } from '@/components/ui/table';
 import { columns, data } from './column';
 import FilterStatus from './FilterStatus';
+
 import { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 
 type Status = {
   value: string;
@@ -57,6 +59,8 @@ export default function TaskTable() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+
+  const data = useAppSelector((state) => state.taskReducer.tasks)
 
   const table = useReactTable({
     data,
@@ -84,8 +88,16 @@ export default function TaskTable() {
 
   return (
     <div className='w-full'>
-      <div className='flex items-center py-4'>
+      <div className='flex items-center py-4 flex-wrap md:flex-nowrap'>
         <div className='flex flex-1 items-center space-x-2'>
+          <Input
+            placeholder='Filter tasks by title...'
+            value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
+            onChange={event =>
+              table.getColumn('title')?.setFilterValue(event.target.value)
+            }
+            className='h-8 w-[150px] lg:w-[250px]'
+          />
           {table.getColumn('status') && (
             <FilterStatus
               column={table.getColumn('status')}
@@ -106,7 +118,7 @@ export default function TaskTable() {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant='outline' className='ml-auto'>
+            <Button variant='outline' className='my-3 md:ml-auto'>
               Columns <ChevronDownIcon className='ml-2 h-4 w-4' />
             </Button>
           </DropdownMenuTrigger>
@@ -130,7 +142,7 @@ export default function TaskTable() {
         </DropdownMenu>
       </div>
       <div className='rounded-md border'>
-        <Table>
+        <Table className='relative w-[850px] md:w-full'>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
