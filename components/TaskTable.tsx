@@ -31,7 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { columns, data } from './column';
+import { columns } from './column';
 import FilterStatus from './FilterStatus';
 
 import { useState } from 'react';
@@ -60,7 +60,7 @@ export default function TaskTable() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  const data = useAppSelector((state) => state.taskReducer.tasks)
+  const data = useAppSelector(state => state.taskReducer.tasks);
 
   const table = useReactTable({
     data,

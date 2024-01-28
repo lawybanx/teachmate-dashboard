@@ -13,7 +13,7 @@ import TaskForm from './TaskForm';
 import { useState } from 'react';
 
 export default function FormDialog() {
-  const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

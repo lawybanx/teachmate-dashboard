@@ -27,9 +27,9 @@ import {
 } from '@/components/ui/popover';
 import { toast } from 'sonner';
 
-import { addTask } from '@/lib/features/tasks/tasksSlice';
+import { addTask, updateTask } from '@/lib/features/tasks/tasksSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 
 const formSchema = z.object({
   title: z
@@ -51,20 +51,39 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 type TaskFormProps = {
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsOpen?: Dispatch<SetStateAction<boolean>> | any;
+  edit?: boolean;
 };
 
-export default function TaskForm({ setIsOpen }: TaskFormProps) {
+export default function TaskForm({ setIsOpen, edit }: TaskFormProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
 
   const dispatch = useAppDispatch();
+  const currentTask = useAppSelector(state => state.taskReducer.currentTask);
+
+  useEffect(() => {
+    if (edit && currentTask) {
+      // If in edit mode and there's a current task, set initial values
+      form.reset({
+        title: currentTask.title,
+        date: currentTask.date,
+        description: currentTask.description,
+      });
+    }
+  }, [edit, currentTask, form.reset]);
 
   function onSubmit(data: FormValues) {
-    dispatch(addTask(data));
+    if (edit && currentTask) {
+      dispatch(updateTask({ ...currentTask, ...data }));
+      toast.success('Task has been updated');
+    } else {
+      dispatch(addTask(data));
+      toast.success('A new task has been created');
+    }
+
     setIsOpen(false);
-    toast.success('A new task has been created');
   }
 
   return (
@@ -146,7 +165,7 @@ export default function TaskForm({ setIsOpen }: TaskFormProps) {
             </FormItem>
           )}
         />
-        <Button type='submit'>Create</Button>
+        <Button type='submit'>{edit ? 'Edit' : 'Create'}</Button>
       </form>
     </Form>
   );

@@ -2,7 +2,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Task } from '@/components/column';
 
-const initialState = {
+interface TaskState {
+  tasks: Task[];
+  currentTask: Task | null;
+}
+
+const initialState: TaskState = {
   tasks: [
     {
       id: 1,
@@ -20,7 +25,8 @@ const initialState = {
       status: 'completed',
       date: '2024-01-26T00:00:00.000Z',
     },
-  ] as Task[],
+  ],
+  currentTask: null,
 };
 
 const tasks = createSlice({
@@ -36,12 +42,17 @@ const tasks = createSlice({
       };
       state.tasks.push(newTask);
     },
-    editTask: (state, action: PayloadAction<Task>) => {
+    editTask: (state, action: PayloadAction<number>) => {
+      const taskId = action.payload;
+      state.currentTask = state.tasks.find(task => task.id === taskId) || null;
+    },
+    updateTask: (state, action: PayloadAction<Task>) => {
       const index = state.tasks.findIndex(
         task => task.id === action.payload.id
       );
       if (index !== -1) {
         state.tasks[index] = action.payload;
+        state.currentTask = null; // Clear the currentTask after updating
       }
     },
     toggleStatus: (
@@ -61,5 +72,5 @@ const tasks = createSlice({
   },
 });
 
-export const { addTask, editTask, toggleStatus } = tasks.actions;
+export const { addTask, editTask, updateTask, toggleStatus } = tasks.actions;
 export default tasks.reducer;
